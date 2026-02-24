@@ -1,16 +1,26 @@
 package com.example.superheroapi
 
 import android.os.Bundle
-import androidx.appcompat.widget.SearchView
+import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
+import com.example.superheroapi.data.response.SuperHeroApiService
 import com.example.superheroapi.databinding.ActivityMainBinding
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    @Inject
+    lateinit var superHeroApiService: SuperHeroApiService
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,6 +28,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initIU()
+
 
     }
 
@@ -34,13 +45,18 @@ class MainActivity : AppCompatActivity() {
             }
         })
     }
-    private fun searchByName(query: String) {}
 
-    private fun getRetrofit(): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl("https://superheroapi.com/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
+    private fun searchByName(query: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val myResponse = superHeroApiService.getSuperHeroes(query)
+            if (myResponse.isSuccessful) {
+                Log.i("Vane", "It´s successful")
+            } else {
+                Log.i("Vane", "It´s not successful")
+            }
+        }
     }
+
 }
+
 
