@@ -1,25 +1,29 @@
-package com.example.superheroapi
+package com.example.superheroapi.main
 
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
-import com.example.superheroapi.data.response.SuperHeroApiService
+import androidx.core.view.isVisible
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.superheroapi.data.SuperHeroApiService
 import com.example.superheroapi.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import retrofit2.Retrofit
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+
     @Inject
     lateinit var superHeroApiService: SuperHeroApiService
+
+    private lateinit var adapter: SuperHeroAdapter
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,19 +48,33 @@ class MainActivity : AppCompatActivity() {
                 return false
             }
         })
+
+        adapter = SuperHeroAdapter()
+        binding.recyclerView.setHasFixedSize(true)
+        binding.recyclerView.layoutManager = LinearLayoutManager(this)
+        binding.recyclerView.adapter = adapter
+
     }
 
     private fun searchByName(query: String) {
+        binding.progressBar.isVisible = true
         CoroutineScope(Dispatchers.IO).launch {
             val myResponse = superHeroApiService.getSuperHeroes(query)
+            Log.i("Vane", "It´s successful")
             if (myResponse.isSuccessful) {
-                Log.i("Vane", "It´s successful")
-            } else {
-                Log.i("Vane", "It´s not successful")
+                val response = myResponse.body()
+                runOnUiThread {
+                    adapter.updateList(response?.results ?: emptyList())
+                    binding.progressBar.isVisible = false
+                }
+                if (response != null) {
+                    Log.i("Vane", response.toString())
+                } else {
+                    Log.i("Vane", "No response")
+                }
+
             }
         }
     }
 
 }
-
-

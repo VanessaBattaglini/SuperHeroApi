@@ -15,7 +15,7 @@
         android:theme="@style/Theme.SuperHeroApi"
         android:name=".MyApp">
         <activity
-            android:name=".MainActivity"
+            android:name=".main.MainActivity"
             android:exported="true"
             tools:ignore="Instantiatable">
             <intent-filter>

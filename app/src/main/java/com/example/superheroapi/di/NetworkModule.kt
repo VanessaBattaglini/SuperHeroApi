@@ -1,6 +1,6 @@
 package com.example.superheroapi.di
 
-import com.example.superheroapi.data.response.SuperHeroApiService
+import com.example.superheroapi.data.SuperHeroApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
