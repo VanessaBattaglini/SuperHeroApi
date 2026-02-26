@@ -1,5 +1,6 @@
 package com.example.superheroapi.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.enableEdgeToEdge
@@ -9,6 +10,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.superheroapi.data.SuperHeroApiService
 import com.example.superheroapi.databinding.ActivityMainBinding
+import com.example.superheroapi.main.DetailSuperHeroActivity.Companion.EXTRA_ID
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -49,7 +51,7 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        adapter = SuperHeroAdapter()
+        adapter = SuperHeroAdapter{id -> navigateToDetail(id)}
         binding.recyclerView.setHasFixedSize(true)
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.adapter = adapter
@@ -75,6 +77,12 @@ class MainActivity : AppCompatActivity() {
 
             }
         }
+    }
+
+    private fun navigateToDetail(id: String){
+        val intent = Intent(this, DetailSuperHeroActivity::class.java)
+        intent.putExtra(EXTRA_ID, id)
+        startActivity(intent)
     }
 
 }

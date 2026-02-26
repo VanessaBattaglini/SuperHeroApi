@@ -8,7 +8,8 @@ import com.example.superheroapi.R
 import com.example.superheroapi.data.response.SuperHeroItemResult
 
 class SuperHeroAdapter(
-    var superHeroList: List<SuperHeroItemResult> = emptyList()
+    var superHeroList: List<SuperHeroItemResult> = emptyList(),
+    private val onItemSelected: (String) -> Unit
 ): RecyclerView.Adapter<SuperHeroViewHolder>() {
 
     @SuppressLint("NotifyDataSetChanged")
@@ -29,7 +30,7 @@ class SuperHeroAdapter(
         viewholder: SuperHeroViewHolder,
         position: Int
     ) {
-        viewholder.bind(superHeroList[position])
+        viewholder.bind(superHeroList[position], onItemSelected)
     }
 
     override fun getItemCount(): Int = superHeroList.size
