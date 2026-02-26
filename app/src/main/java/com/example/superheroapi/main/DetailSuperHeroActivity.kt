@@ -47,6 +47,7 @@ class DetailSuperHeroActivity : AppCompatActivity() {
 
     private fun createUI(superHero: SuperHeroDetailResponse) {
         Picasso.get().load(superHero.image.url).into(binding.ivSuperHero)
+        binding.tvSuperHeroName.text = superHero.name
     }
 
 
